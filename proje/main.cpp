@@ -68,55 +68,51 @@ public:
         fstream uwrite("../proje/files/user.txt");      //inserting the data in the users file
         for(auto & y :ulist )
         {
-        uwrite<<y.first<<endl;
-        uwrite<<y.second<<endl;
+            uwrite<<y.first<<endl;
+            uwrite<<y.second<<endl;
         }
         uwrite.close();
         if(!ufind(name))
-        cout<<"account deleted"<<endl;
+            cout<<"account deleted"<<endl;
         line;
 
     }
     void unameedit(string name,string newname)
-   {   if(!ufind(name))
+    {   if(!ufind(name))
         {
             cout<<"user not found"<<endl;
             line;
             return;
         }
         string tmp=ulist[name];
-       this->udel(name);
-       uinsert(newname,tmp);
-   }
-   void upassedit(string name,string trypassword,string newpassword )
-   {
-       if(!ufind(name))
-              {
-                  cout<<"user not found"<<endl;
-                  line;
-                  return;
-              }
-       while(ulist[name]!=trypassword)
-       {
-           cout<<"the password is incorrect,try again :"<<endl;
-           cin>>trypassword;
-       }
-       udel(name);
-       ulist[name]=newpassword;
-       uinsert(name,newpassword);
-   }
+        this->udel(name);
+        uinsert(newname,tmp);
+    }
+    void upassedit(string name,string trypassword,string newpassword )
+    {
+        if(!ufind(name))
+        {
+            cout<<"user not found"<<endl;
+            line;
+            return;
+        }
+        while(ulist[name]!=trypassword)
+        {
+            cout<<"the password is incorrect,try again :"<<endl;
+            cin>>trypassword;
+        }
+        udel(name);
+        ulist[name]=newpassword;
+        uinsert(name,newpassword);
+    }
 };
-class staff
-{
+class product
+{   private:
+    string name;
+    double price;
+    int stock;
 };
 int main()
 {
-    users s;
-    line;
-    line;
-    s.uprint();
-    s.uinsert("choochar","injahameare");
-    s.upassedit("hamid","sdfsff","goh");
-    s.unameedit("choochar","sosk");
-
+              .
 }
