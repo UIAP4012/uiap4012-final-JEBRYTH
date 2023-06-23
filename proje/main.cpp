@@ -7,6 +7,8 @@
 using namespace std;
 class users
 {   friend class staff;
+    friend class product;
+    friend class products;
     map<string,string> ulist;
 public:
     users()
@@ -107,12 +109,80 @@ public:
     }
 };
 class product
-{   private:
+{   friend class products;
     string name;
     double price;
     int stock;
+    product(string name,double price,int stock)
+    {
+        this->name=name;
+        this->price=price;
+        this->stock=stock;
+    }
+    product()
+    {
+
+    }
 };
+class products
+{
+    set<product> plist;
+    products(){
+        fstream pread("../proje/files/product.txt");
+        string tmp;
+        product tp;
+        while (getline (pread,tmp)) {
+        tp.name=tmp;
+        getline (pread,tmp);
+        tp.price=stod(tmp);
+        getline (pread,tmp);
+        tp.stock=stod(tmp);
+        }
+        pread.close();
+    }
+    void pinsert(string pname,string pstock,string pprice);
+    void pnameedit(string pname,string pnewname);
+    void pstockedit(string pname,string addstock);
+    void ppriceedit(string pname,string newprice);
+    int  pstockfind(string pname);
+};
+class factors
+{ public:
+ void finsert(string uname,string pname, int num ,double price ,string currency ) //adds a factor to the file
+ {   fstream fwrite;
+     fwrite.open("../proje/files/factorlog.csv", ios::out | ios::app);
+     fwrite<<uname<<","<<pname<<","<<num<<","<<price<<","<<currency<<"\n";
+     fwrite.close();
+ }
+
+ void fprint()                                                               //prints the purchase log (all the factors )
+ {
+     ifstream fread("../proje/files/factorlog.csv");
+     string tmp;
+     cout<<"head of log"<<endl;
+     line;
+     while(getline(fread,tmp,','))
+     {   cout<<endl;
+         cout<<"purchaser name : "<<endl<<tmp<<endl;
+         getline(fread,tmp,',');
+         cout<<"product name : "<<endl<<tmp<<endl;
+         getline(fread,tmp,',');
+         cout<<"number of items bought : "<<endl<<tmp<<endl;
+         getline(fread,tmp,',');
+         cout<<"price : "<<endl<<tmp<<endl;
+         getline(fread,tmp,'\n');
+         cout<<"currency : "<<endl<<tmp<<endl;
+         line;
+     }
+     cout<<"end of log"<<endl;
+
+ }
+
+};
+
 int main()
 {
-              .
+    string tmp="19.101";
+    double tpp=stod(tmp);
+    cout<<tpp;
 }
