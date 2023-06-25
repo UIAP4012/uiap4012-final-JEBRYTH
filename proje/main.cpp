@@ -75,10 +75,6 @@ public:
             uwrite<<y.second<<endl;
         }
         uwrite.close();
-        if(!ufind(name))
-            cout<<"account deleted"<<endl;
-        line;
-
     }
     void unameedit(string name,string newname)
     {   if(!ufind(name))
@@ -91,13 +87,13 @@ public:
         this->udel(name);
         uinsert(newname,tmp);
     }
-    void upassedit(string name,string trypassword,string newpassword )
+    bool upassedit(string name,string trypassword,string newpassword )
     {
         if(!ufind(name))
         {
             cout<<"user not found"<<endl;
             line;
-            return;
+            return 0;
         }
         while(ulist[name]!=trypassword)
         {
@@ -105,8 +101,15 @@ public:
             cin>>trypassword;
         }
         udel(name);
-        ulist[name]=newpassword;
         uinsert(name,newpassword);
+        return 1;
+    }
+    bool ulogin(string name,string password)
+    {
+        for(auto & y : ulist)
+            if ((name==y.first) && (password==y.second))
+                return 1;
+        return 0;
     }
 };
 class product
@@ -148,23 +151,23 @@ int operator<(const product first,const product second )
 class products
 {
     set<product> plist;
-    public:
+public:
     products(){
         fstream pread("../proje/files/product.txt");
         string tmp;
         product tp;
         while (getline (pread,tmp)) {
-        tp.name=tmp;
-        getline (pread,tmp);
-        tp.price=stod(tmp);
-        getline (pread,tmp);
-        tp.stock=stod(tmp);
-        plist.insert(tp);
+            tp.name=tmp;
+            getline (pread,tmp);
+            tp.price=stod(tmp);
+            getline (pread,tmp);
+            tp.stock=stod(tmp);
+            plist.insert(tp);
         }
         pread.close();
     }
     void pinsert(string pname,int pstock,double pprice)
-{
+    {
         if(pcheck(pname))
         {
             cout<<"product already exists"<<endl;
@@ -182,7 +185,7 @@ class products
         tp.stock=pstock;
         plist.insert(tp);
         pwrite.close();
-}
+    }
     void pnameedit(string pname,string pnewname)
     {   int ps=pfind(pname).stock;
         double p=pfind(pname).price;
@@ -208,23 +211,23 @@ class products
         {
             if(y.name==pname)
             {
-             return y;
+                return y;
             }
         }
         cout<<"product not found"<<endl;
-                 line;
-                 product y;
-                 y.name="0";
-                 y.price=0;
-                 y.stock=0;
-                return y ;
+        line;
+        product y;
+        y.name="0";
+        y.price=0;
+        y.stock=0;
+        return y ;
 
     }
     bool pcheck(string pname)
     {
         for(auto & y : plist)
-        if(pname==y.name)
-            return 1;
+            if(pname==y.name)
+                return 1;
         return 0;
 
     }
@@ -258,49 +261,201 @@ class products
         {
             cout<<"product name : "<<y.name<<endl
                <<"price : "<<y.price<<endl
-               <<"available in stock : "<<y.stock<<endl;
+              <<"available in stock : "<<y.stock<<endl;
             line;
         }
     }
 };
 class factors
 { public:
- void finsert(string uname,string pname, int num ,double price ,string currency ) //adds a factor to the file
- {   fstream fwrite;
-     fwrite.open("../proje/files/factorlog.csv", ios::out | ios::app);
-     fwrite<<uname<<","<<pname<<","<<num<<","<<price<<","<<currency<<"\n";
-     fwrite.close();
- }
+    void finsert(string uname,string pname, int num ,double price ,string currency ) //adds a factor to the file
+    {   fstream fwrite;
+        fwrite.open("../proje/files/factorlog.csv", ios::out | ios::app);
+        fwrite<<uname<<","<<pname<<","<<num<<","<<price<<","<<currency<<"\n";
+        fwrite.close();
+    }
+    void fprint()                                                               //prints the purchase log (all the factors )
+    {
+        ifstream fread("../proje/files/factorlog.csv");
+        string tmp;
+        cout<<"head of log"<<endl;
+        line;
+        while(getline(fread,tmp,','))
+        {   cout<<endl;
+            cout<<"purchaser name : "<<endl<<tmp<<endl;
+            getline(fread,tmp,',');
+            cout<<"product name : "<<endl<<tmp<<endl;
+            getline(fread,tmp,',');
+            cout<<"number of items bought : "<<endl<<tmp<<endl;
+            getline(fread,tmp,',');
+            cout<<"price : "<<endl<<tmp<<endl;
+            getline(fread,tmp,'\n');
+            cout<<"currency : "<<endl<<tmp<<endl;
+            line;
+        }
+        cout<<"end of log"<<endl;
 
- void fprint()                                                               //prints the purchase log (all the factors )
- {
-     ifstream fread("../proje/files/factorlog.csv");
-     string tmp;
-     cout<<"head of log"<<endl;
-     line;
-     while(getline(fread,tmp,','))
-     {   cout<<endl;
-         cout<<"purchaser name : "<<endl<<tmp<<endl;
-         getline(fread,tmp,',');
-         cout<<"product name : "<<endl<<tmp<<endl;
-         getline(fread,tmp,',');
-         cout<<"number of items bought : "<<endl<<tmp<<endl;
-         getline(fread,tmp,',');
-         cout<<"price : "<<endl<<tmp<<endl;
-         getline(fread,tmp,'\n');
-         cout<<"currency : "<<endl<<tmp<<endl;
-         line;
-     }
-     cout<<"end of log"<<endl;
+    }
+    void fuserprint(string name)                                                               //prints the purchase log (all the factors )
+    {
+        ifstream fread("../proje/files/factorlog.csv");
+        string tmp;
+        cout<<"head of log"<<endl;
+        line;
+        while(getline(fread,tmp,','))
+        {   if(name==tmp)
+            {
+                cout<<endl;
+                cout<<"purchaser name : "<<endl<<tmp<<endl;
+                getline(fread,tmp,',');
+                cout<<"product name : "<<endl<<tmp<<endl;
+                getline(fread,tmp,',');
+                cout<<"number of items bought : "<<endl<<tmp<<endl;
+                getline(fread,tmp,',');
+                cout<<"price : "<<endl<<tmp<<endl;
+                getline(fread,tmp,'\n');
+                cout<<"currency : "<<endl<<tmp<<endl;
+                line;
+            }
+            else
+            {
+                getline(fread,tmp,',');
+                getline(fread,tmp,',');
+                getline(fread,tmp,',');
+                getline(fread,tmp,'\n');
+            }
+        }
+        cout<<"end of log"<<endl;
 
- }
+    }
+    void fusernc(string name,string newname)   //changes the name of the user in the factors file
+    {
+        fstream fwrite;
+                fwrite.open("../proje/files/factorlog1.csv", ios::out | ios::app);
+                ifstream fread("../proje/files/factorlog.csv");
+                string tmp;
+                while(getline(fread,tmp,','))
+                {   if(name==tmp)
+                    {
+                        fwrite<<newname<<",";
+                    }
+                    else
+                    {
+                      fwrite<<tmp<<",";
+                    }
+                    getline(fread,tmp,',');
+                    fwrite<<tmp<<",";
+                    getline(fread,tmp,',');
+                    fwrite<<tmp<<",";
+                    getline(fread,tmp,',');
+                    fwrite<<tmp<<",";
+                    getline(fread,tmp,'\n');
+                    fwrite<<tmp<<"\n";
 
+                }
+                fwrite.close();
+                fread.close();
+                remove("../proje/files/factorlog.csv");
+                rename("../proje/files/factorlog1.csv","../proje/files/factorlog.csv");
+
+    }
 };
+
 void login()
 {
     cout<<"---------------login--------------"<<endl;
+    cout<<".enter 1 to login"<<endl;
+    cout<<".enter 2 to login as admin"<<endl;
+    cout<<".enter 3 to sign up"<<endl;
+    int cs;
+    cin>>cs;
+    switch(cs)
+    {
+    case 1:
+    {
+        while(1)
+        {   int check=1;
+            users userinf ;
+            string name;
+            string password;
+            cout<<"enter user name :"<<endl;
+            cin>>name;
+            if(!userinf.ufind(name))
+            {
+                cout<<"username not found"<<endl;
+                cout<<"enter 0 to go back, 1 to try again"<<endl;
+                cin>>check;
+                if(check)
+                continue;
+                else
+                break;
+            }
+            if(!check)
+                break;
+            cout<<"enter password :"<<endl;
+            cin>>password;
+            if(userinf.ulogin(name,password))
+            {udshbrd(name);
+                break;
+            }
+            cout<<"incorrect password or username"<<endl;
+        }
+        break;
+    }
+    case 2:
+    {
+        break;
+    }
+    case 3:
+    {
+        while(1)
+        {
+            users userinf ;
+            string name;
+            string password;
+            cout<<"enter user name :"<<endl;
+            cin>>name;
+            if(userinf.ufind(name))
+            {
+                cout<<"this username already exists"<<endl;
+                continue;
+            }
+            cout<<"enter password :"<<endl;
+            cin>>password;
+            userinf.uinsert(name,password);
+            cout<<"accout added,now you can log in"<<endl;
+            line;
+            break;
+        }
+        while(1)
+        {
+            users userinf ;
+            string name;
+            string password;
+            cout<<"enter user name :"<<endl;
+            cin>>name;
+            if(!userinf.ufind(name))
+            {
+                cout<<"username not found"<<endl;
+                continue;
+            }
+            cout<<"enter password :"<<endl;
+            cin>>password;
+            if(userinf.ulogin(name,password))
+            {udshbrd(name);
+                break;
+            }
+
+        }
+        break;
+    }
+    }
 }
 int main()
 {
+
+    while(1){
+        login();
+    }
 
 }
