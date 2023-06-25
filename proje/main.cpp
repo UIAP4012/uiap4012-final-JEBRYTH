@@ -360,7 +360,98 @@ class factors
 
     }
 };
+void udshbrd(string name)
+{   users s;
+    factors f;
+    while(1)
+    {
+        line;
+        cout<<name<<"s dashboard"<<endl<<endl;
+        line;
+        cout<<".1 : to see your previous purchases"<<endl;
+        cout<<".2 : to open the products menu"<<endl;
+        cout<<".3 : to change your username"<<endl;
+        cout<<".4 : to change your password"<<endl;
+        cout<<".5 : to log out"<<endl;
+        cout<<".6 : to delete your account"<<endl;
+        line;
+        int cs;
+        cin>>cs;
+        switch(cs)
+        {
+        case 1:
+        {
+            cout<<"your previos purchases : "<<endl;
+            factors f;
+            f.fuserprint(name);
+            break;
 
+        }
+        case 2:
+        {
+
+        }
+        case 3:
+        {
+            string newname;
+            cout<<"enter your new username"<<endl;
+            cin>>newname;
+            s.unameedit(name,newname);
+            f.fusernc(name,newname);
+            name=newname;
+            break;
+
+        }
+        case 4:
+        {
+            while(1)
+            {
+                users s;
+                string trypassword;
+                string newpassword;
+                cout<<"enter your current password"<<endl;
+                cin>>trypassword;
+                cout<<"enter your new password"<<endl;
+                cin>>newpassword;
+                if( s.upassedit(name,trypassword,newpassword))
+                    break;
+            }
+            break;
+        }
+        case 5:
+        {
+            return;
+        }
+        case 6:
+        {
+            while(1)
+            {
+                string pass;
+                cout<<"enter your current password"<<endl;
+                cin>>pass;
+                if(s.ulogin(name,pass))
+                {
+                    string tmp;
+                    cout<<"type yes to confirm"<<endl;
+                    cin>>tmp;
+                    if(tmp=="yes")
+                    {
+                        s.udel(name);
+                        cout<<"your account is deleted,please login or sign up with a new account "<<endl;
+                        line;
+                        return;
+                    }
+                    else{
+                        cout<<"canceled deleting account"<<endl;
+                        line;
+                        break;
+                    }
+                }
+            }
+        }
+        }
+    }
+}
 void login()
 {
     cout<<"---------------login--------------"<<endl;
