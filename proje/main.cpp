@@ -48,7 +48,8 @@ public:
         { cout<<"this username is already taken"<<endl;
             line;
             return;}
-        fstream uwrite("../proje/files/user.txt");      //inserting the data in both ulist and the users file
+        fstream uwrite;
+        uwrite.open("../proje/files/user.txt",std::ios::app);      //inserting the data in both ulist and the users file
         uwrite<<name<<endl;
         uwrite<<password<<endl;
         ulist[name]=password;
@@ -110,9 +111,11 @@ public:
 };
 class product
 {   friend class products;
+public:
     string name;
     double price;
     int stock;
+public:
     product(string name,double price,int stock)
     {
         this->name=name;
@@ -124,9 +127,28 @@ class product
 
     }
 };
+int operator<(const product first,const product second )
+{
+
+    if(first.name<second.name)
+        return 1;
+    if(first.name>second.name)
+        return 0;
+    if(first.price<second.price)
+        return 0;
+    if(first.price<second.price)
+        return 1;
+    if(first.stock<second.stock)
+        return 1;
+    if(first.stock<second.stock)
+        return 0;
+    else return 0;
+
+}
 class products
 {
     set<product> plist;
+    public:
     products(){
         fstream pread("../proje/files/product.txt");
         string tmp;
@@ -137,14 +159,109 @@ class products
         tp.price=stod(tmp);
         getline (pread,tmp);
         tp.stock=stod(tmp);
+        plist.insert(tp);
         }
         pread.close();
     }
-    void pinsert(string pname,string pstock,string pprice);
-    void pnameedit(string pname,string pnewname);
-    void pstockedit(string pname,string addstock);
-    void ppriceedit(string pname,string newprice);
-    int  pstockfind(string pname);
+    void pinsert(string pname,int pstock,double pprice)
+{
+        if(pcheck(pname))
+        {
+            cout<<"product already exists"<<endl;
+            line;
+            return;
+        }
+        fstream pwrite;
+        pwrite.open("../proje/files/product.txt", std::ios::app);//inserting the data in both plist and the product file
+        pwrite<<pname<<endl;
+        pwrite<<pprice<<endl;
+        pwrite<<pstock<<endl;
+        product tp;
+        tp.name=pname;
+        tp.price=pprice;
+        tp.stock=pstock;
+        plist.insert(tp);
+        pwrite.close();
+}
+    void pnameedit(string pname,string pnewname)
+    {   int ps=pfind(pname).stock;
+        double p=pfind(pname).price;
+        pdel(pname);
+        pinsert(pnewname,ps,p);
+    }
+    void pstockedit(string pname,int addstock)
+    {
+        int ps=pfind(pname).stock;
+        double p=pfind(pname).price;
+        pdel(pname);
+        pinsert(pname,ps+addstock,p);
+    }
+    void ppriceedit(string pname,double newprice)
+    {
+        int ps=pfind(pname).stock;
+        pdel(pname);
+        pinsert(pname,ps,newprice);
+    }
+    product  pfind(string pname)
+    {
+        for(auto & y :plist)
+        {
+            if(y.name==pname)
+            {
+             return y;
+            }
+        }
+        cout<<"product not found"<<endl;
+                 line;
+                 product y;
+                 y.name="0";
+                 y.price=0;
+                 y.stock=0;
+                return y ;
+
+    }
+    bool pcheck(string pname)
+    {
+        for(auto & y : plist)
+        if(pname==y.name)
+            return 1;
+        return 0;
+
+    }
+    void pdel(string pname)
+    {
+        if(!pcheck(pname))
+        {
+            cout<<"product not found"<<endl;
+            line;
+            return;
+        }
+        plist.erase(pfind(pname));
+        remove("../proje/files/product.txt");
+        fstream newpfile;
+        newpfile.open("../proje/files/product.txt",ios::out);
+        newpfile.close();
+        fstream pwrite("../proje/files/product.txt");      //inserting the data in the product file
+        for(auto & y :plist )
+        {
+            pwrite<<y.name<<endl;
+            pwrite<<y.price<<endl;
+            pwrite<<y.stock<<endl;
+        }
+        pwrite.close();
+    }
+    void pprint()
+    {
+        cout<<"list of products : "<<endl;
+        line;
+        for(auto & y : plist)
+        {
+            cout<<"product name : "<<y.name<<endl
+               <<"price : "<<y.price<<endl
+               <<"available in stock : "<<y.stock<<endl;
+            line;
+        }
+    }
 };
 class factors
 { public:
@@ -179,10 +296,11 @@ class factors
  }
 
 };
-
+void login()
+{
+    cout<<"---------------login--------------"<<endl;
+}
 int main()
 {
-    string tmp="19.101";
-    double tpp=stod(tmp);
-    cout<<tpp;
+
 }
