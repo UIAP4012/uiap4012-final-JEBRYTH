@@ -4,9 +4,9 @@ hedfon
 kablmashti
 10.1
 11
-mobile
-292.1
-1211
 mouse
 67
 3
+mobile
+292.1
+11
