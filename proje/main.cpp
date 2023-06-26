@@ -360,9 +360,139 @@ class factors
 
     }
 };
-void buy()
+void buy(string name)
 {
-
+    products p;
+    factors f;
+cout<<name<<"s dashboard : shop"<<endl<<endl;
+line;
+cout<<".1 : to see all the products"<<endl;
+cout<<".2 : to view a product by its name"<<endl;
+cout<<".3 : to buy a product"<<endl;
+cout<<".4 : to go back "<<endl;
+line;
+int cs;
+cin>>cs;
+switch(cs)
+{
+case 1 :
+{
+   p.pprint();
+   break;
+}
+case 2 :
+{
+    cout<<"enter full name of the product : "<<endl;
+    string pname;
+    cin>>pname;
+    product tmp=p.pfind(pname);
+    cout<<"product name : "<<endl;
+    cout<<tmp.name<<endl;
+    cout<<"products price : "<<endl;
+    cout<<tmp.price<<endl;
+    cout<<"stock : "<<endl;
+    cout<<tmp.stock<<endl;
+    line;
+    break;
+}
+case 3 :
+{
+    cout<<"enter full name of the product : "<<endl;
+    string pname;
+    cin>>pname;
+    if(!p.pcheck(name))
+    {
+        cout<<"item not found "<<endl;
+        line;
+        break;
+    }
+    product tmp=p.pfind(pname);
+    cout<<"enter the number of items you want to buy : "<<endl;
+    int pbuy;
+    bool q=0;
+    while(1)
+    {
+    cin>>pbuy;
+    if(pbuy>tmp.stock)
+      {cout<<"this many items are not available "<<endl<<"enter 1 to try again or 0 to go back"<<endl;
+        int c;
+        cin>>c;
+        if(c)
+            continue;
+        else
+        {
+            q=1;
+            break;
+        }
+      }
+    }
+    if(q)
+        break;
+    cout<<"select your prefered currency : "<<endl;
+    cout<<".1 : toman "<<endl;
+    cout<<".2 : dollar "<<endl;
+    cout<<".3 : euro "<<endl;
+    cout<<".4 : pound "<<endl;
+    int cs;
+    string curr;
+    double pprice=0;
+    cin>>cs;
+    fstream buyread("../proje/files/currency.txt");
+    switch(cs)
+    {
+    case 1 :
+    {
+        pprice=tmp.price*pbuy;
+        curr="toman";
+        break;
+    }
+    case 2 :
+    {   string tp;
+        getline(buyread,tp);
+        pprice=tmp.price*stod(tp)*pbuy;
+        curr="dollar";
+        break;
+    }
+    case 3 :
+    {
+        string tp;
+                getline(buyread,tp);
+                getline(buyread,tp);
+                pprice=tmp.price*stod(tp)*pbuy;
+                curr="euro";
+                break;
+    }
+    case 4 :
+    {
+        string tp;
+                getline(buyread,tp);
+                getline(buyread,tp);
+                getline(buyread,tp);
+                pprice=tmp.price*stod(tp)*pbuy;
+                curr="pound";
+                break;
+    }
+    }
+    cout<<"the total price is : "<<endl;
+    cout<<pprice<<" "<<curr<<endl;
+    cout<<"type yes to confirm your purchase,type any thing to go back"<<endl;
+    string yes;
+    cin>>yes;
+    if(yes=="yes")
+    {
+        cout<<"ok";
+        f.finsert(name,pname,pbuy,pprice,curr);
+        p.pstockedit(name,-(pbuy));
+        break;
+    }
+    else
+        break;
+}
+case 4 :
+{
+    return;
+}
+}
 }
 void sdshbrd(string adname)
 {
