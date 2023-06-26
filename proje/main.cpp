@@ -331,35 +331,202 @@ class factors
     void fusernc(string name,string newname)   //changes the name of the user in the factors file
     {
         fstream fwrite;
-                fwrite.open("../proje/files/factorlog1.csv", ios::out | ios::app);
-                ifstream fread("../proje/files/factorlog.csv");
-                string tmp;
-                while(getline(fread,tmp,','))
-                {   if(name==tmp)
-                    {
-                        fwrite<<newname<<",";
-                    }
-                    else
-                    {
-                      fwrite<<tmp<<",";
-                    }
-                    getline(fread,tmp,',');
-                    fwrite<<tmp<<",";
-                    getline(fread,tmp,',');
-                    fwrite<<tmp<<",";
-                    getline(fread,tmp,',');
-                    fwrite<<tmp<<",";
-                    getline(fread,tmp,'\n');
-                    fwrite<<tmp<<"\n";
+        fwrite.open("../proje/files/factorlog1.csv", ios::out | ios::app);
+        ifstream fread("../proje/files/factorlog.csv");
+        string tmp;
+        while(getline(fread,tmp,','))
+        {   if(name==tmp)
+            {
+                fwrite<<newname<<",";
+            }
+            else
+            {
+                fwrite<<tmp<<",";
+            }
+            getline(fread,tmp,',');
+            fwrite<<tmp<<",";
+            getline(fread,tmp,',');
+            fwrite<<tmp<<",";
+            getline(fread,tmp,',');
+            fwrite<<tmp<<",";
+            getline(fread,tmp,'\n');
+            fwrite<<tmp<<"\n";
 
-                }
-                fwrite.close();
-                fread.close();
-                remove("../proje/files/factorlog.csv");
-                rename("../proje/files/factorlog1.csv","../proje/files/factorlog.csv");
+        }
+        fwrite.close();
+        fread.close();
+        remove("../proje/files/factorlog.csv");
+        rename("../proje/files/factorlog1.csv","../proje/files/factorlog.csv");
 
     }
 };
+void buy()
+{
+
+}
+void sdshbrd(string adname)
+{
+    users s;
+    factors f;
+    products p;
+    while(1)
+    {
+        line;
+        cout<<"admin : "<<adname<<"s dashboard"<<endl<<endl;
+        line;
+        cout<<".1 : to see all purchases"<<endl;
+        cout<<".2 : to see a users purchases"<<endl;
+        cout<<".3 : to see all users list"<<endl;
+        cout<<".4 : to ban a users account"<<endl;
+        cout<<".5 : to add a new product to the shop"<<endl;
+        cout<<".6 : to edit a products name"<<endl;
+        cout<<".7 : to edit a products price"<<endl;
+        cout<<".8 : to add to a products stock"<<endl;
+        cout<<".9 : to manualy update currency price"<<endl;
+        cout<<".10 : to delete a product"<<endl;
+        cout<<".11 : to see all products"<<endl;
+        cout<<".12 : to log out "<<endl;
+        line;
+        int cs;
+        cin>>cs;
+        switch(cs)
+        {
+        case 1:
+        {
+            f.fprint();
+            line;
+            break;
+        }
+        case 2 :
+        {
+            cout<<"enter the username : "<<endl;
+            string uname;
+            cin>>uname;
+            cout<<uname<<"s previos purchases : "<<endl;
+            f.fuserprint(uname);
+            line;
+            break;
+
+        }
+        case 3 :
+        {
+          s.uprint();
+          line;
+          break;
+        }
+        case 4 :
+        {
+            cout<<"enter the username : "<<endl;
+            string uname;
+            cin>>uname;
+            s.udel(uname);
+            cout<<uname<<"has been banned"<<endl;
+            line;
+            break;
+        }
+        case 5 :
+        {  string pname;
+            double price;
+            int stock;
+          cout<<"enter the name of the product : "<<endl;
+          cin>>pname;
+          cout<<"enter the number of items available : "<<endl;
+          cin>>stock;
+          cout<<"enter the price of the product : "<<endl;
+          cin>>price;
+          p.pinsert(pname,stock,price);
+          cout<<"product added"<<endl;
+          line;
+          break;
+        }
+        case 6 :
+        {cout<<"enter products current name : "<<endl;
+            string oldname;
+            cin>>oldname;
+            cout<<"enter products new name : "<<endl;
+            string newname;
+            cin>>newname;
+            p.pnameedit(oldname,newname);
+            cout<<"product data edited"<<endl;
+            line;
+            break;
+        }
+        case 7 :
+        {
+            cout<<"enter products name : "<<endl;
+                        string pname;
+                        cin>>pname;
+                        cout<<"enter products new price in toman : "<<endl;
+                        double price;
+                        cin>>price;
+                        p.ppriceedit(pname,price);
+                        cout<<"product data edited"<<endl;
+                        line;
+                        break;
+        }
+        case 8 :
+        {cout<<"enter products name : "<<endl;
+            string name;
+            cin>>name;
+            cout<<"enter how much do you want to add to stock(negative to reduce) : "<<endl;
+            int addstock;
+            cin>>addstock;
+            p.pstockedit(name,addstock);
+            cout<<"product data edited"<<endl;
+            line;
+            break;
+        }
+        case 9 :
+        { fstream cnew;
+          cnew.open("../proje/files/currency1.txt",ios::out);
+          double dollar;
+          double euro;
+          double pound;
+          cout<<"enter the new price of dollar in toman : "<<endl;
+          cin>>dollar;
+          cout<<"enter the new price of euro in toman : "<<endl;
+          cin>>euro;
+          cout<<"enter the new price of pound in toman : "<<endl;
+          cin>>pound;
+          cnew<<dollar<<endl;
+          cnew<<euro<<endl;
+          cnew<<pound<<endl;
+          cnew.close();
+          remove("../proje/files/currency.txt");
+          rename("../proje/files/currency1.txt","../proje/files/currency.txt");
+          cout<<"currency price updated"<<endl;
+          line;
+          break;
+
+        }
+        case 10 :
+        {
+            cout<<"enter products name : "<<endl;
+            string pname;
+            cin>>pname;
+            if(!p.pcheck(pname))
+            {
+             cout<<"product not found"<<endl;
+             break;
+            }
+            p.pdel(pname);
+            cout<<"product deleted"<<endl;
+            line;
+            break;
+        }
+        case 11 :
+        {
+            p.pprint();
+            break;
+        }
+        case 12 :
+        {
+            return;
+        }
+        }
+
+    }
+}
 void udshbrd(string name)
 {   users s;
     factors f;
@@ -456,8 +623,7 @@ void login()
 {
     cout<<"---------------login--------------"<<endl;
     cout<<".enter 1 to login"<<endl;
-    cout<<".enter 2 to login as admin"<<endl;
-    cout<<".enter 3 to sign up"<<endl;
+    cout<<".enter 2 to sign up"<<endl;
     int cs;
     cin>>cs;
     switch(cs)
@@ -477,9 +643,9 @@ void login()
                 cout<<"enter 0 to go back, 1 to try again"<<endl;
                 cin>>check;
                 if(check)
-                continue;
+                    continue;
                 else
-                break;
+                    break;
             }
             if(!check)
                 break;
@@ -495,10 +661,7 @@ void login()
     }
     case 2:
     {
-        break;
-    }
-    case 3:
-    {
+
         while(1)
         {
             users userinf ;
@@ -539,6 +702,41 @@ void login()
 
         }
         break;
+    }
+    case 3:
+    {   bool q=1;
+        while(q){
+            cout<<"enter admin name"<<endl;
+            string adname;
+            cin>>adname;
+            cout<<"enter your password"<<endl;
+            string adpassword;
+            cin>>adpassword;
+            fstream ad("../proje/files/admin.txt");
+            string tmp;
+            while(getline(ad,tmp))
+            {
+                if(tmp==adname)
+                {   getline(ad,tmp);
+                    if(tmp==adpassword)
+                    { q=0;
+                        sdshbrd(adname);
+                        break;
+
+                    }
+
+                }
+            }
+            if(!q)
+                break;
+            cout<<"wrong password or username.type 0 to go back. 1 to try again"<<endl;
+            int ck;
+            cin>>ck;
+            if(ck)
+                continue;
+            else
+                break;
+        }
     }
     }
 }
