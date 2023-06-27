@@ -5,28 +5,26 @@
 #include <bits/stdc++.h>
 #define line cout<<"------------------------------------------------"<<endl
 using namespace std;
-class users
+class users                  //this class holds all the user name and passwords of the users and stores them
 {   friend class staff;
     friend class product;
     friend class products;
-    map<string,string> ulist;
+    map<string,string> ulist; //this map contains all the user names and passwords
 public:
-    users()
+    users()                   //reads all the user info stored in the "user" file and transfers them to "ulist " for easier access
     {
         fstream uread("../proje/files/user.txt");
         string tmp;
-        int i=0;
         while (getline (uread,tmp)) {
             string p1=tmp;
             getline (uread,tmp);
             string p2=tmp;
             ulist[p1]=p2;
-            i++;
         }
         uread.close();
 
     }
-    void uprint()
+    void uprint()          //prints all the user names and their passwords
     {
         for(auto & y : ulist)
         {cout<<"name : "<<endl<<y.first<<endl;
@@ -34,7 +32,7 @@ public:
             line;
         }
     }
-    bool ufind(string name)
+    bool ufind(string name)     //tells us if a username is already taken or not
     {
         for(auto & y : ulist)
             if (name==y.first)
@@ -42,7 +40,7 @@ public:
         return 0;
 
     }
-    void uinsert(string name,string password)
+    void uinsert(string name,string password) //adds a user to the list and to the file(used for sign up)
     {
         if(ufind(name))
         { cout<<"this username is already taken"<<endl;
@@ -55,7 +53,7 @@ public:
         ulist[name]=password;
         uwrite.close();
     }
-    void udel(string name)                             //deleting method by name
+    void udel(string name)                             //deleting a username and its password by the username
     {
         if(!ufind(name))
         {
@@ -63,12 +61,12 @@ public:
             line;
             return;
         }
-        ulist.erase(name);
+        ulist.erase(name);                             //deleting data from the list
         remove("../proje/files/user.txt");
         fstream newufile;
         newufile.open("../proje/files/user.txt",ios::out);
         newufile.close();
-        fstream uwrite("../proje/files/user.txt");      //inserting the data in the users file
+        fstream uwrite("../proje/files/user.txt");      //inserting all the data which is stored in the list in the users file
         for(auto & y :ulist )
         {
             uwrite<<y.first<<endl;
@@ -76,7 +74,7 @@ public:
         }
         uwrite.close();
     }
-    void unameedit(string name,string newname)
+    void unameedit(string name,string newname)         //edits a username
     {   if(!ufind(name))
         {
             cout<<"user not found"<<endl;
@@ -87,7 +85,7 @@ public:
         this->udel(name);
         uinsert(newname,tmp);
     }
-    bool upassedit(string name,string trypassword,string newpassword )
+    bool upassedit(string name,string trypassword,string newpassword )  //edits a password
     {
         if(!ufind(name))
         {
@@ -104,7 +102,7 @@ public:
         uinsert(name,newpassword);
         return 1;
     }
-    bool ulogin(string name,string password)
+    bool ulogin(string name,string password)          //checks if the given name and password match with any data stored in the ulist.
     {
         for(auto & y : ulist)
             if ((name==y.first) && (password==y.second))
@@ -130,7 +128,7 @@ public:
 
     }
 };
-int operator<(const product first,const product second )
+int operator<(const product first,const product second )  // <overleaded for product class so that we can use a set for storing products
 {
 
     if(first.name<second.name)
@@ -152,7 +150,7 @@ class products
 {
     set<product> plist;
 public:
-    products(){
+    products(){                                 //reads the data from the file and stores it in a set(plist) for easier access
         fstream pread("../proje/files/product.txt");
         string tmp;
         product tp;
@@ -166,7 +164,7 @@ public:
         }
         pread.close();
     }
-    void pinsert(string pname,int pstock,double pprice)
+    void pinsert(string pname,int pstock,double pprice) //adds a product to both the product file and plist
     {
         if(pcheck(pname))
         {
@@ -186,26 +184,26 @@ public:
         plist.insert(tp);
         pwrite.close();
     }
-    void pnameedit(string pname,string pnewname)
+    void pnameedit(string pname,string pnewname) //edits a products name(in file and plist)
     {   int ps=pfind(pname).stock;
         double p=pfind(pname).price;
         pdel(pname);
         pinsert(pnewname,ps,p);
     }
-    void pstockedit(string pname,int addstock)
+    void pstockedit(string pname,int addstock) //adds to a products stock (in file and plist)
     {
         int ps=pfind(pname).stock;
         double p=pfind(pname).price;
         pdel(pname);
         pinsert(pname,ps+addstock,p);
     }
-    void ppriceedit(string pname,double newprice)
+    void ppriceedit(string pname,double newprice) //edits a products price(in file and plist)
     {
         int ps=pfind(pname).stock;
         pdel(pname);
         pinsert(pname,ps,newprice);
     }
-    product  pfind(string pname)
+    product  pfind(string pname)    //finds a product by its name and returns it as a "product" object
     {
         for(auto & y :plist)
         {
@@ -223,7 +221,7 @@ public:
         return y ;
 
     }
-    bool pcheck(string pname)
+    bool pcheck(string pname)  //checks if a product with the given name exists or not
     {
         for(auto & y : plist)
             if(pname==y.name)
@@ -231,7 +229,7 @@ public:
         return 0;
 
     }
-    void pdel(string pname)
+    void pdel(string pname)  //deltes a product(from file and plist)
     {
         if(!pcheck(pname))
         {
@@ -253,7 +251,7 @@ public:
         }
         pwrite.close();
     }
-    void pprint()
+    void pprint()  //prints all the products and their data
     {
         cout<<"list of products : "<<endl;
         line;
@@ -328,7 +326,7 @@ class factors
         cout<<"end of log"<<endl;
 
     }
-    void fusernc(string name,string newname)   //changes the name of the user in the factors file
+    void fusernc(string name,string newname)   //changes the name of the user in the factors file(used for when a user changes their username)
     {
         fstream fwrite;
         fwrite.open("../proje/files/factorlog1.csv", ios::out | ios::app);
@@ -360,7 +358,7 @@ class factors
 
     }
 };
-void buy(string name)
+void buy(string name) //the shop
 {
     products p;
     factors f;
@@ -517,7 +515,7 @@ void sdshbrd(string adname)
         cout<<".6 : to edit a products name"<<endl;
         cout<<".7 : to edit a products price"<<endl;
         cout<<".8 : to add to a products stock"<<endl;
-        cout<<".9 : to manualy update currency price"<<endl;
+        cout<<".9 : to manualy update currency price"<<endl; //changes values stored in the "currency" file .first line is for dollar,2 for euro and 3 for pound
         cout<<".10 : to delete a product"<<endl;
         cout<<".11 : to see all products"<<endl;
         cout<<".12 : to log out "<<endl;
@@ -755,7 +753,7 @@ void udshbrd(string name)
         }
     }
 }
-void login()
+void login() //insert 3 to open staff dashboard
 {
     cout<<"---------------login--------------"<<endl;
     cout<<".enter 1 to login"<<endl;
